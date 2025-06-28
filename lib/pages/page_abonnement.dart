@@ -1,26 +1,45 @@
-import 'package:flutter/material.dart';
-import '../core/constantes/couleurs_application.dart';
-import '../core/constantes/dimensions_application.dart';
-import '../widgets/bouton_moderne.dart';
+// ===================================
+// IMPORTS NÉCESSAIRES
+// ===================================
+
+import 'package:flutter/material.dart';                    // Import principal de Flutter (widgets, couleurs, etc.)
+import '../core/constantes/couleurs_application.dart';     // Fichier contenant toutes les couleurs de l'app
+import '../core/constantes/dimensions_application.dart';   // Fichier contenant les tailles (padding, margins, etc.)
+import '../widgets/bouton_moderne.dart';                   // Widget personnalisé pour les boutons stylisés
+
+// ===================================
+// PAGE D'ABONNEMENT - WIDGET PRINCIPAL
+// ===================================
 
 /// Page des abonnements présentant les différents plans disponibles
 /// Permet aux utilisateurs de choisir leur formule de transcription
+/// 
+/// Cette page utilise un StatelessWidget car elle n'a pas besoin de gérer
+/// un état interne qui change au cours du temps
 class PageAbonnement extends StatelessWidget {
   const PageAbonnement({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // SCAFFOLD : Structure de base d'une page Flutter
+    // Fournit la structure de base (AppBar, Body, FloatingActionButton, etc.)
     return Scaffold(
+      // Couleur de fond de toute la page
       backgroundColor: CouleursApplication.fondPrincipal,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(DimensionsApplication.paddingM),
+      
+      // BODY : Contenu principal de la page
+      body: SingleChildScrollView( // Permet le scroll si le contenu dépasse la taille d'écran
+        padding: const EdgeInsets.all(DimensionsApplication.paddingM), // Espacement autour du contenu
+        
+        // COLUMN : Organise les enfants verticalement (les uns sous les autres)
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start, // Aligne le contenu à gauche
           children: [
+            // 1. EN-TÊTE : Titre et description de la page
             _construireEnteteAbonnement(),
-            const SizedBox(height: 32),
+            const SizedBox(height: 32), // Espace vertical de 32 pixels
             
-            // Plan Gratuit
+            // 2. PLAN GRATUIT : Premier plan d'abonnement
             _construireCartePlan(
               titre: 'Gratuit',
               prix: '0€',
@@ -30,13 +49,13 @@ class PageAbonnement extends StatelessWidget {
                 'Qualité standard',
                 'Export TXT uniquement',
               ],
-              estPopulaire: false,
-              estPlanActuel: true,
+              estPopulaire: false, // Pas de badge "POPULAIRE"
+              estPlanActuel: true, // C'est le plan actuellement utilisé
             ),
             
-            const SizedBox(height: 16),
+            const SizedBox(height: 16), // Espace entre les cartes
             
-            // Plan Pro (Populaire)
+            // 3. PLAN PRO : Plan recommandé avec badge "POPULAIRE"
             _construireCartePlan(
               titre: 'Pro',
               prix: '9,99€',
@@ -48,13 +67,13 @@ class PageAbonnement extends StatelessWidget {
                 'Historique illimité',
                 'Support prioritaire',
               ],
-              estPopulaire: true,
-              estPlanActuel: false,
+              estPopulaire: true, // Affiche le badge "POPULAIRE"
+              estPlanActuel: false, // L'utilisateur n'a pas ce plan
             ),
             
             const SizedBox(height: 16),
             
-            // Plan Business
+            // 4. PLAN BUSINESS : Plan le plus complet
             _construireCartePlan(
               titre: 'Business',
               prix: '29,99€',
@@ -71,7 +90,7 @@ class PageAbonnement extends StatelessWidget {
               estPlanActuel: false,
             ),
             
-            // Espace pour la navigation en bas
+            // ESPACE FINAL : Pour éviter que le contenu soit coupé par la navigation
             const SizedBox(height: 100),
           ],
         ),
@@ -79,75 +98,95 @@ class PageAbonnement extends StatelessWidget {
     );
   }
 
-  /// Construit l'en-tête de la page avec titre et description
+// ===================================
+// MÉTHODES PRIVÉES - CONSTRUCTION DES WIDGETS
+// ===================================
+
+  /// MÉTHODE 1 : Construit l'en-tête de la page avec titre et description
+  /// Le underscore (_) indique que cette méthode est privée (utilisable uniquement dans cette classe)
   Widget _construireEnteteAbonnement() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start, // Aligne le texte à gauche
       children: [
-        // Titre principal
+        // TITRE PRINCIPAL : Texte large et gras
         const Text(
           'Choisissez votre abonnement',
           style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w700,
-            color: CouleursApplication.textePrincipal,
+            fontSize: 28, // Taille de police large
+            fontWeight: FontWeight.w700, // Texte très gras
+            color: CouleursApplication.textePrincipal, // Couleur définie dans les constantes
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 8), // Petit espace entre titre et description
         
-        // Description
+        // DESCRIPTION : Texte plus petit et moins contrasté
         const Text(
           'Débloquez tout le potentiel de NoteCraft',
           style: TextStyle(
-            fontSize: 16,
-            color: CouleursApplication.texteSecondaire,
+            fontSize: 16, // Taille normale
+            color: CouleursApplication.texteSecondaire, // Couleur plus claire
           ),
         ),
       ],
     );
   }
 
-  /// Construit une carte de plan d'abonnement
+  /// MÉTHODE 2 : Construit une carte de plan d'abonnement
+  /// Cette méthode est réutilisable pour créer différents plans avec des paramètres différents
   Widget _construireCartePlan({
-    required String titre,
-    required String prix,
-    required String periode,
-    required List<String> fonctionnalites,
-    required bool estPopulaire,
-    required bool estPlanActuel,
+    required String titre,           // Nom du plan (ex: "Pro")
+    required String prix,            // Prix (ex: "9,99€")
+    required String periode,         // Période (ex: "/mois")
+    required List<String> fonctionnalites, // Liste des fonctionnalités
+    required bool estPopulaire,      // Détermine si on affiche le badge "POPULAIRE"
+    required bool estPlanActuel,     // Détermine si c'est le plan actuel de l'utilisateur
   }) {
+    // CONTAINER : Widget qui permet de styliser un contenu (bordures, ombres, etc.)
     return Container(
-      width: double.infinity,
+      width: double.infinity, // Prend toute la largeur disponible
+      
+      // DÉCORATION : Style visuel de la carte
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(DimensionsApplication.radiusL),
-        // Bordure spéciale pour le plan populaire
+        color: Colors.white, // Fond blanc
+        borderRadius: BorderRadius.circular(DimensionsApplication.radiusL), // Coins arrondis
+        
+        // BORDURE CONDITIONNELLE : 
+        // Si c'est populaire = bordure colorée, sinon = bordure grise
         border: estPopulaire 
             ? Border.all(color: CouleursApplication.primaire, width: 2)
             : Border.all(color: CouleursApplication.bordure),
+            
+        // OMBRE : Effet de profondeur sous la carte
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.05), // Ombre légère et transparente
+            blurRadius: 10, // Flou de l'ombre
+            offset: const Offset(0, 4), // Décalage de l'ombre (x=0, y=4)
           ),
         ],
       ),
+      
+      // STACK : Permet de superposer des widgets les uns sur les autres
       child: Stack(
         children: [
-          // Badge "POPULAIRE" pour le plan recommandé
+          // BADGE "POPULAIRE" : Affiché seulement si estPopulaire = true
           if (estPopulaire) _construireBadgePopulaire(),
           
-          // Contenu principal de la carte
+          // CONTENU PRINCIPAL : Le contenu réel de la carte
           Padding(
-            padding: const EdgeInsets.all(DimensionsApplication.paddingXL),
+            padding: const EdgeInsets.all(DimensionsApplication.paddingXL), // Espacement intérieur
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // En-tête du plan (titre, prix)
                 _construireEntetePlan(titre, prix, periode, estPopulaire),
                 const SizedBox(height: 24),
+                
+                // Liste des fonctionnalités
                 _construireListeFonctionnalites(fonctionnalites),
                 const SizedBox(height: 24),
+                
+                // Bouton d'action
                 _construireBoutonPlan(estPlanActuel),
               ],
             ),
@@ -157,38 +196,44 @@ class PageAbonnement extends StatelessWidget {
     );
   }
 
-  /// Construit le badge "POPULAIRE" positionné en haut à droite
+  /// MÉTHODE 3 : Construit le badge "POPULAIRE" positionné en haut à droite
   Widget _construireBadgePopulaire() {
+    // POSITIONED : Positionne un widget à un endroit précis dans un Stack
     return Positioned(
-      top: 0,
-      right: 20,
+      top: 0,    // En haut
+      right: 20, // À 20 pixels du bord droit
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), // Espacement interne
+        
+        // DÉCORATION DU BADGE : Forme et couleur
         decoration: BoxDecoration(
-          color: CouleursApplication.primaire,
+          color: CouleursApplication.primaire, // Couleur de fond
+          // BORDURES ARRONDIES : Seulement en bas pour créer un effet "étiquette"
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(8),
             bottomRight: Radius.circular(8),
           ),
         ),
+        
+        // TEXTE DU BADGE
         child: const Text(
           'POPULAIRE',
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
+            color: Colors.white,        // Texte blanc
+            fontSize: 10,              // Petite taille
+            fontWeight: FontWeight.bold, // Texte gras
           ),
         ),
       ),
     );
   }
 
-  /// Construit l'en-tête du plan (titre, prix, période)
+  /// MÉTHODE 4 : Construit l'en-tête du plan (titre, prix, période)
   Widget _construireEntetePlan(String titre, String prix, String periode, bool estPopulaire) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Titre du plan
+        // TITRE DU PLAN : Nom du plan en gros
         Text(
           titre,
           style: const TextStyle(
@@ -200,23 +245,26 @@ class PageAbonnement extends StatelessWidget {
         
         const SizedBox(height: 8),
         
-        // Prix et période
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        // PRIX ET PÉRIODE : Affichés côte à côte
+        Row( // ROW organise les enfants horizontalement
+          crossAxisAlignment: CrossAxisAlignment.end, // Aligne en bas
           children: [
+            // PRIX : Gros chiffre
             Text(
               prix,
               style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w800,
+                fontSize: 32, // Très gros
+                fontWeight: FontWeight.w800, // Très gras
+                // COULEUR CONDITIONNELLE : Coloré si populaire, sinon couleur normale
                 color: estPopulaire ? CouleursApplication.primaire : CouleursApplication.textePrincipal,
               ),
             ),
+            // PÉRIODE : Plus petit, à côté du prix
             Text(
               periode,
               style: const TextStyle(
                 fontSize: 16,
-                color: CouleursApplication.texteSecondaire,
+                color: CouleursApplication.texteSecondaire, // Couleur plus claire
               ),
             ),
           ],
@@ -225,24 +273,25 @@ class PageAbonnement extends StatelessWidget {
     );
   }
 
-  /// Construit la liste des fonctionnalités du plan
+  /// MÉTHODE 5 : Construit la liste des fonctionnalités du plan
   Widget _construireListeFonctionnalites(List<String> fonctionnalites) {
     return Column(
+      // MAP : Transforme chaque fonctionnalité (String) en Widget
       children: fonctionnalites.map((fonctionnalite) => 
         Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Row(
+          padding: const EdgeInsets.only(bottom: 12), // Espace entre chaque ligne
+          child: Row( // Icône + texte sur la même ligne
             children: [
-              // Icône de validation
+              // ICÔNE DE VALIDATION : Coche verte
               Icon(
-                Icons.check_circle,
+                Icons.check_circle, // Icône coche circulaire
                 size: 20,
-                color: CouleursApplication.succes,
+                color: CouleursApplication.succes, // Couleur verte définie dans les constantes
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 12), // Espace entre icône et texte
               
-              // Texte de la fonctionnalité
-              Expanded(
+              // TEXTE DE LA FONCTIONNALITÉ
+              Expanded( // Prend tout l'espace restant de la ligne
                 child: Text(
                   fonctionnalite,
                   style: const TextStyle(
@@ -254,20 +303,26 @@ class PageAbonnement extends StatelessWidget {
             ],
           ),
         ),
-      ).toList(),
+      ).toList(), // Convertit le résultat du map en List<Widget>
     );
   }
 
-  /// Construit le bouton d'action du plan
+  /// MÉTHODE 6 : Construit le bouton d'action du plan
   Widget _construireBoutonPlan(bool estPlanActuel) {
     return SizedBox(
-      width: double.infinity,
-      child: BoutonModerne(
+      width: double.infinity, // Bouton prend toute la largeur
+      child: BoutonModerne( // Widget personnalisé défini dans widgets/bouton_moderne.dart
+        // TEXTE CONDITIONNEL : Change selon si c'est le plan actuel ou non
         texte: estPlanActuel ? 'Plan actuel' : 'Choisir ce plan',
+        
+        // FONCTION CONDITIONNELLE : 
+        // Si c'est le plan actuel = null (bouton désactivé)
+        // Sinon = fonction qui sera exécutée au clic
         onPressed: estPlanActuel ? null : () {
-          // Simulation du choix du plan
-          // Dans une vraie app, ici on déclencherait le processus de paiement
+          debugPrint('Choix du plan : navigation vers le paiement');
         },
+        
+        // STYLE CONDITIONNEL : Bouton secondaire si c'est le plan actuel
         estSecondaire: estPlanActuel,
       ),
     );
